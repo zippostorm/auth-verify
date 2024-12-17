@@ -1,11 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:5000/api/auth"
-    : "/api/auth";
-
 axios.defaults.withCredentials = true;
 
 export const useAuthStore = create((set) => ({
@@ -19,7 +14,7 @@ export const useAuthStore = create((set) => ({
   signup: async (email, password, name) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/signup`, {
+      const response = await axios.post(`/api/auth/signup`, {
         email,
         password,
         name,
@@ -40,7 +35,7 @@ export const useAuthStore = create((set) => ({
   verifyEmail: async (code) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/verify-email`, {
+      const response = await axios.post(`/api/auth/verify-email`, {
         code,
       });
       set({
