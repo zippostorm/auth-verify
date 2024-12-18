@@ -33,7 +33,9 @@ const App = () => {
   const { isCheckingAuth, checkAuth, isAuthenticated, user } = useAuthStore();
 
   useEffect(() => {
-    checkAuth();
+    if (user) {
+      checkAuth();
+    }
   }, []);
 
   return (
