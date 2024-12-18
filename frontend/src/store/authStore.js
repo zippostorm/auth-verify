@@ -73,6 +73,33 @@ export const useAuthStore = create(
         }
       },
 
+      logout: async () => {
+        set({ isLoading: true, error: null }, false, "Logout start");
+        try {
+          await axios.post(`/api/auth/logout`);
+          set(
+            {
+              user: null,
+              isAuthenticated: false,
+              isLoading: false,
+              error: null,
+            },
+            false,
+            "Logout success"
+          );
+        } catch (error) {
+          set(
+            {
+              error: error.response?.data?.message || "Error logging out",
+              isLoading: false,
+            },
+            false,
+            "Logout failure"
+          );
+          throw error;
+        }
+      },
+
       verifyEmail: async (code) => {
         set({ isLoading: true, error: null }, false, "Verify email start");
         try {
@@ -110,6 +137,7 @@ export const useAuthStore = create(
               user: response.data.user,
               isAuthenticated: true,
               isCheckingAuth: false,
+              error: null,
             },
             false,
             "Check auth success"
