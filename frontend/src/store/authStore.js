@@ -73,6 +73,33 @@ export const useAuthStore = create(
         }
       },
 
+      logout: async () => {
+        set({ isLoading: true, error: null }, false, "Logout start");
+        try {
+          await axios.post(`/api/auth/logout`);
+          set(
+            {
+              user: null,
+              isAuthenticated: false,
+              isLoading: false,
+              error: null,
+            },
+            false,
+            "Logout success"
+          );
+        } catch (error) {
+          set(
+            {
+              error: error.response?.data?.message || "Error logging out",
+              isLoading: false,
+            },
+            false,
+            "Logout failure"
+          );
+          throw error;
+        }
+      },
+
       verifyEmail: async (code) => {
         set({ isLoading: true, error: null }, false, "Verify email start");
         try {
@@ -110,6 +137,7 @@ export const useAuthStore = create(
               user: response.data.user,
               isAuthenticated: true,
               isCheckingAuth: false,
+              error: null,
             },
             false,
             "Check auth success"
@@ -125,6 +153,68 @@ export const useAuthStore = create(
             false,
             "Check auth failure"
           );
+        }
+      },
+
+      forgotPassword: async (email) => {
+        set({ isLoading: true, error: null }, false, "Forgot password start");
+        try {
+          const response = await axios.post(`/api/auth/forgot-password`, {
+            email,
+          });
+          set(
+            {
+              isLoading: false,
+              error: null,
+              message: response.data.message,
+            },
+            false,
+            "Forgot password success"
+          );
+        } catch (error) {
+          set(
+            {
+              isLoading: false,
+              error: error.response?.data?.message || "Error forgot password",
+            },
+            false,
+            "Forgot password failure"
+          );
+          throw error;
+        }
+      },
+
+      resetPassword: async (token, password) => {
+        set(
+          { isLoading: true, error: null, message: null },
+          false,
+          "Reset password start"
+        );
+        try {
+          const response = await axios.post(
+            `/api/auth/reset-password/${token}`,
+            {
+              password,
+            }
+          );
+          set(
+            {
+              isLoading: false,
+              error: null,
+            },
+            false,
+            "Reset password success"
+          );
+        } catch (error) {
+          set(
+            {
+              isLoading: false,
+              error: error.response?.data?.message || "Error reset password",
+            },
+            false,
+            "Reset password failure"
+          );
+          throw error;
         }
       },
     }),
