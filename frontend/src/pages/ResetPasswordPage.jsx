@@ -32,6 +32,7 @@ const ResetPasswordPage = () => {
       toast.error(error.message || "Error resetting password");
     }
   };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
