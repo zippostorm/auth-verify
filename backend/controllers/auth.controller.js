@@ -130,6 +130,8 @@ export const verifyEmail = async (req, res) => {
 
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
+  console.log(email);
+
   try {
     const user = await User.findOne({ email });
 
